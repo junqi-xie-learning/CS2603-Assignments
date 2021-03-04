@@ -50,14 +50,19 @@ fill in your proof scripts and replace "Admitted" with "Qed".  *)
 Theorem eq_sym: forall (A: Type) (x y: A), x = y -> y = x.
 Proof.
   intros.
-(* FILL IN HERE *) Admitted.
+  rewrite <- H.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
 Theorem eq_trans: forall (A: Type) (x y z: A), x = y -> y = z -> x = z.
 Proof.
   intros.
-(* FILL IN HERE *) Admitted.
+  rewrite H.
+  rewrite H0.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** The following example is an special instance of congruence properties.
@@ -68,7 +73,10 @@ Theorem Zplus_add: forall x1 x2 y1 y2: Z,
   x1 = y1 -> x2 = y2 -> x1 + x2 = y1 + y2.
 Proof.
   intros.
-(* FILL IN HERE *) Admitted.
+  rewrite H.
+  rewrite H0.
+  reflexivity.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -100,8 +108,8 @@ Do they express equivalent meaning? 1: Yes. 2: No.
 Remove "[Admitted.]" and write down your choice.
 *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_1.
 (** [] *)
@@ -116,8 +124,8 @@ number (偶数); if yes, [0] will be assigned into [Y].
 Do they express equivalent meaning? 1: Yes. 2: No.
 *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_2.
 (** [] *)
@@ -131,8 +139,8 @@ Informal description: the program [c] will never terminate.
 Do they express equivalent meaning? 1: Yes. 2: No.
 *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_3.
 (** [] *)
@@ -146,8 +154,8 @@ Informal description: any program [c].
 Do they express equivalent meaning? 1: Yes. 2: No.
 *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_4.
 (** [] *)
@@ -161,8 +169,8 @@ Informal description: the program [c] will not change the sum of [X] and [Y].
 Do they express equivalent meaning? 1: Yes. 2: No.
 *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_5.
 (** [] *)
@@ -215,7 +223,12 @@ Fact swapping_by_arith_correct:
        {{ {[X]} = y AND {[Y]} = x }}.
 Proof.
   intros.
-(* FILL IN HERE *) Admitted.
+  apply hoare_seq with ({[X]} = x + y AND {[Y]} = y)%assert.
+  apply triple1.
+  apply hoare_seq with ({[X]} = x + y AND {[Y]} = x)%assert.
+  apply triple2.
+  apply triple3.
+Qed.
 (** [] *)
 End swapping_by_arith.
 
@@ -237,7 +250,14 @@ Hypothesis R_trans: forall a b c, R a b -> R b c -> R a c.
 Fact R_trans5: forall a b c d e, R a b -> R b c -> R c d -> R d e -> R a e.
 Proof.
   intros.
-(* FILL IN HERE *) Admitted.
+  apply R_trans with (b := b).
+  apply H.
+  apply R_trans with (b := c).
+  apply H0.
+  apply R_trans with (b := d).
+  apply H1.
+  apply H2.
+Qed.
 (** [] *)
 
 End PreOrder.
