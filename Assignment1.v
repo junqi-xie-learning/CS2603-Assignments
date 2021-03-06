@@ -124,8 +124,9 @@ number (偶数); if yes, [0] will be assigned into [Y].
 Do they express equivalent meaning? 1: Yes. 2: No.
 *)
 
-Definition my_choice: Z := 1.
+Definition my_choice: Z := 2.
 (* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
+(* Note that the program [c] doesn't necessarily test [X]. *)
 
 End Task2_2.
 (** [] *)
@@ -154,7 +155,7 @@ Informal description: any program [c].
 Do they express equivalent meaning? 1: Yes. 2: No.
 *)
 
-Definition my_choice: Z := 2.
+Definition my_choice: Z := 1.
 (* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_4.
