@@ -63,8 +63,8 @@ Is it possible to prove it using the following loop invariant?
 3. The triple is not provable.
 *)
 
-Definition the_correct_statement_above: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition the_correct_statement_above := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task1_1.
 (** [] *)
@@ -89,8 +89,8 @@ Is it possible to prove it using loop invariant [False]?
 3. The triple is not provable.
 *)
 
-Definition the_correct_statement_above: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition the_correct_statement_above := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task1_2.
 (** [] *)
@@ -117,8 +117,8 @@ Is it possible to prove it using the following loop invariant?
 3. The triple is not provable.
 *)
 
-Definition the_correct_statement_above: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition the_correct_statement_above := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task1_3.
 (** [] *)
@@ -191,8 +191,9 @@ by [hoare_asgn_fwd].
     {{ ??? }}
 *)
 
-Definition post: Assertion
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition post: Assertion :=
+  EXISTS a, 100 <= {[a + B + C]} AND {[a]} <= 0 AND {[A]} = {[0]}.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_1.
 (** [] *)
@@ -212,8 +213,9 @@ by [hoare_asgn_fwd].
     {{ ??? }}
 *)
 
-Definition post: Assertion
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition post: Assertion :=
+  EXISTS a, 0 <= {[a]} + {[B]} AND {[a]} * {[B]} <= 100 AND {[A]} = {[a + B]}.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_2.
 (** [] *)
@@ -233,8 +235,9 @@ by [hoare_asgn_fwd].
     {{ ??? }}
 *)
 
-Definition post (a b: Z): Assertion
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition post (a b: Z): Assertion :=
+  EXISTS y, (EXISTS x, x = a AND {[y]} = b AND {[X]} = x + b) AND {[Y]} = {[X - y]}.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_3.
 (** [] *)
@@ -256,8 +259,9 @@ by [hoare_asgn_bwd].
     {{ {[S]} = 1000 AND {[T]} = 10 }}
 *)
 
-Definition pre: Assertion
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition pre: Assertion :=
+  {[S * T]} = 1000 AND {[T]} = 10.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 (** Reversely, consider the same assignment command, please write down the
 strongest postcondition defined by [hoare_asgn_fwd]
@@ -267,8 +271,9 @@ strongest postcondition defined by [hoare_asgn_fwd]
     {{ ??? }}
 *)
 
-Definition post: Assertion
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition post: Assertion :=
+  EXISTS s, {[s * T]} = 1000 AND {[T]} = 10 AND {[S]} = {[s * T]}.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 (** Now, if comparing the original postcondition and the strongest postcondition
 that you just wrote down. Which one in the following statements is correct?
@@ -284,8 +289,8 @@ that you just wrote down. Which one in the following statements is correct?
 
 4. They two are not comparable. *)
 
-Definition the_correct_statement_number: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition the_correct_statement_number := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_4.
 
@@ -306,8 +311,9 @@ by [hoare_asgn_bwd].
     {{ {[X]} = x + y AND {[Y]} = x }}
 *)
 
-Definition pre (x y: Z): Assertion
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition pre (x y: Z): Assertion :=
+  {[X]} = x + y AND {[X - Y]} = x.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 (** Reversely, consider the same assignment command, please write down the
 strongest postcondition defined by [hoare_asgn_fwd]
@@ -317,8 +323,9 @@ strongest postcondition defined by [hoare_asgn_fwd]
     {{ ??? }}
 *)
 
-Definition post (x y: Z): Assertion
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition post (x y: Z): Assertion :=
+  EXISTS z, {[X]} = x + y AND {[X - z]} = x AND {[Y]} = {[X - z]}.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 (** Now, if comparing the original postcondition and the strongest postcondition
 that you just wrote down. Which one in the following statements is correct?
@@ -334,8 +341,8 @@ that you just wrote down. Which one in the following statements is correct?
 
 4. They two are not comparable. *)
 
-Definition the_correct_statement_number: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition the_correct_statement_number := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 (** More generally, consider an arbitrary assertion [P] and an assignment
 command [X ::= E] in our simple toy programming language. Let [Q] be the weakest
@@ -353,8 +360,8 @@ precondition of [P] and [X ::= E] and let [R] be the strongest postcondition of
 Hint: this is a multiple-choice problem. You should use a Coq ascending list to
 describe your answer, e.g. [1; 2; 3; 4], [1; 3], [2]. *)
 
-Definition the_statements_that_may_be_true: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition the_statements_that_may_be_true := [2; 3].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task2_5.
 (** [] *)
@@ -441,7 +448,25 @@ Fact min_if_correct: forall a b: Z,
       EndIf
       {{ {[C]} = a AND a <= b OR {[C]} = b AND b < a }}.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  apply hoare_if.
+  + eapply hoare_consequence.
+    1: apply der1_1.
+    2: apply der1_2.
+    eapply hoare_consequence_post.
+    - apply hoare_asgn_fwd.
+    - assert_subst.
+      assert_simpl.
+      apply derives_refl.
+  + eapply hoare_consequence.
+    1: apply der1_3.
+    2: apply der1_4.
+    eapply hoare_consequence_post.
+    - apply hoare_asgn_fwd.
+    - assert_subst.
+      assert_simpl.
+      apply derives_refl.
+Qed.
 (** [] *)
 
 (** Here is the decorated program for [min_while]:
@@ -509,7 +534,39 @@ Proof.
   eapply hoare_consequence.
   1: { apply der2_1. }
   2: { apply der2_4. }
-(* FILL IN HERE *) Admitted.
+
+  apply hoare_seq with
+    ({[A]} + {[C]} = a AND 0 <= a AND a <= b OR {[B]} + {[C]} = b AND 0 <= b AND b < a)%assert.
+  + pose proof hoare_asgn_bwd
+               ({[A]} + {[C]} = a AND 0 <= a AND a <= b OR {[B]} + {[C]} = b AND 0 <= b AND b < a)
+               C
+               0.
+    exact H.
+  + apply hoare_while.
+
+    eapply hoare_seq.
+    - eapply hoare_consequence_pre.
+      apply der2_2.
+      pose proof hoare_asgn_bwd
+                 ({[A]} + {[C + 1]} = a AND 0 <= a AND a <= b OR
+                 {[B - 1]} + {[C + 1]} = b AND 0 <= b AND b < a)
+                 A
+                 (A - 1).
+      exact H.
+    - eapply hoare_seq.
+      pose proof hoare_asgn_bwd
+                 ({[A]} + {[C + 1]} = a AND 0 <= a AND a <= b OR
+                 {[B]} + {[C + 1]} = b AND 0 <= b AND b < a)
+                 B
+                 (B - 1).
+      exact H.
+      pose proof hoare_asgn_bwd
+                 ({[A]} + {[C]} = a AND 0 <= a AND a <= b OR
+                 {[B]} + {[C]} = b AND 0 <= b AND b < a)
+                 C
+                 (C + 1).
+      exact H.
+Qed.
 (** [] *)
 
 End Task3.
@@ -533,14 +590,23 @@ End Task3.
 Theorem swap_assum : forall (P Q R : Prop),
   (P -> Q -> R) -> (Q -> P -> R).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  specialize (H H1 H0).
+  exact H.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (contrapositive) *)
 Theorem contrapositive : forall (P Q : Prop),
   (P -> Q) -> (~Q -> ~P).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  pose proof classic P.
+  destruct H1.
+  + specialize (H H1).
+    contradiction.
+  + exact H1.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (and_dup) *)
@@ -549,14 +615,30 @@ Theorem and_dup: forall (P: Prop),
 Proof.
   intros.
   unfold iff.
-  (* FILL IN HERE *) Admitted.
+  split.
+  + intros.
+    split.
+    - exact H.
+    - exact H.
+  + intros.
+    destruct H.
+    exact H.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (and_not_or) *)
 Theorem and_not_or: forall (P Q: Prop),
-  ~ P /\ ~ Q -> ~ (P \/  Q).
+  ~ P /\ ~ Q -> ~ (P \/ Q).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  pose proof classic (P \/ Q).
+  destruct H0.
+  + destruct H.
+    destruct H0.
+    - contradiction.
+    - contradiction.
+  + exact H0.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -594,6 +676,48 @@ Local Instance X: var := new_var().
 Local Instance S: var := new_var().
 Local Instance N: var := new_var().
 
+Lemma der1_1:
+  0 <= {[X]} AND {[S]} = 0 AND {[N]} = 0 |--
+  {[N * (N - 1)]} = 2 * {[S - N]} AND 2 * {[S]} = {[N * (N + 1)]}
+  AND {[S - N]} <= {[X]}.
+Proof.
+  entailer.
+  intros.
+  nia.
+Qed.
+
+Lemma der1_2:
+  {[N * (N - 1)]} = 2 * {[S - N]} AND 2 * {[S]} = {[N * (N + 1)]}
+  AND {[S - N]} <= {[X]} AND NOT {[S <= X]} |--
+  {[N * (N - 1)]} <= 2 * {[X]} AND 2 * {[X]} < {[N * (N + 1)]}.
+Proof.
+  entailer.
+  intros.
+  nia.
+Qed.
+
+Lemma der1_3:
+  {[N * (N - 1)]} = 2 * {[S - N]} AND 2 * {[S]} = {[N * (N + 1)]}
+  AND {[S - N]} <= {[X]} AND {[S <= X]} |--
+  {[(N + 1) * (N + 1 - 1)]} = 2 * {[S]} AND 2 * {[S + (N + 1)]} = {[(N + 1) * (N + 1 + 1)]}
+    AND {[S]} <= {[X]}.
+Proof.
+  entailer.
+  intros.
+  nia.
+Qed.
+
+Lemma der1_4:
+  {[N * (N - 1)]} = 2 * {[S]} AND 2 * {[S + N]} = {[N * (N + 1)]}
+  AND {[S]} <= {[X]} |--
+  {[N * (N - 1)]} = 2 * {[S + N - N]} AND 2 * {[S + N]} = {[N * (N + 1)]}
+  AND {[S + N - N]} <= {[X]}.
+Proof.
+  entailer.
+  intros.
+  nia.
+Qed.
+
 Fact tri_correct:
   {{ 0 <= {[X]} }}
     S ::= 0;;
@@ -602,10 +726,44 @@ Fact tri_correct:
       N ::= N + 1;;
       S ::= S + N
     EndWhile
-  {{ {[N * (N-1)]} <= 2 * {[X]} AND
+  {{ {[N * (N - 1)]} <= 2 * {[X]} AND
      2 * {[X]} < {[N * (N + 1)]} }}.
 Proof.
-(* FILL IN HERE *) Admitted.
+  eapply hoare_seq.
+  { apply hoare_asgn_fwd. }
+  assert_subst.
+  assert_simpl.
+
+  eapply hoare_seq.
+  { apply hoare_asgn_fwd. }
+  assert_subst.
+  assert_simpl.
+
+  eapply hoare_consequence.
+  1: apply der1_1.
+  2: apply der1_2.
+  apply hoare_while.
+
+  apply hoare_seq with
+    ({[N * (N - 1)]} = 2 * {[S]} AND 2 * {[S + N]} = {[N * (N + 1)]}
+    AND {[S]} <= {[X]})%assert.
+  + eapply hoare_consequence_pre.
+    - apply der1_3.
+    - pose proof hoare_asgn_bwd
+                 ({[N * (N - 1)]} = 2 * {[S]} AND 2 * {[S + N]} = {[N * (N + 1)]}
+                 AND {[S]} <= {[X]})
+                 N
+                 (N + 1).
+      exact H.
+  + eapply hoare_consequence_pre.
+    - apply der1_4.
+    - pose proof hoare_asgn_bwd
+                 ({[N * (N - 1)]} = 2 * {[S - N]} AND 2 * {[S]} = {[N * (N + 1)]}
+                 AND {[S - N]} <= {[X]})
+                 S
+                 (S + N).
+      exact H.
+Qed.
 (** [] *)
 
 End Task5_1.
@@ -620,8 +778,8 @@ Import Derived_Rules.
 root.
 
     I ::= 0;;
-    While (I+1)*(I+1) <= X Do
-      I ::= I+1
+    While (I + 1) * (I + 1) <= X Do
+      I ::= I + 1
     EndWhile.
 
 Your task is to prove its correctness. *)
@@ -629,15 +787,62 @@ Your task is to prove its correctness. *)
 Local Instance X: var := new_var().
 Local Instance I: var := new_var().
 
+Lemma der2_1: forall m: Z,
+  0 <= {[X]} AND {[X]} = m AND {[I]} = 0 |--
+  {[I]} * {[I]} <= m AND {[X]} = m.
+Proof.
+  intros.
+  entailer.
+  nia.
+Qed.
+
+Lemma der2_2: forall m: Z,
+  {[I]} * {[I]} <= m AND {[X]} = m AND NOT {[(I + 1) * (I + 1) <= X]} |--
+  {[I]} * {[I]} <= m AND m < ({[I]} + 1) * ({[I]} + 1).
+Proof.
+  intros.
+  entailer.
+  intros.
+  nia.
+Qed.
+
+Lemma der2_3: forall m: Z,
+  {[I]} * {[I]} <= m AND {[X]} = m AND {[(I + 1) * (I + 1) <= X]} |--
+  {[I + 1]} * {[I + 1]} <= m AND {[X]} = m.
+Proof.
+  intros.
+  entailer.
+  intros.
+  nia.
+Qed.
+
 Fact sqrt_correct: forall m: Z,
   {{ 0 <= {[X]} AND {[X]} = m }}
     I ::= 0;;
-    While (I+1)*(I+1) <= X Do
-      I ::= I+1
+    While (I + 1) * (I + 1) <= X Do
+      I ::= I + 1
     EndWhile
   {{ {[I]} * {[I]} <= m AND m < ({[I]} + 1) * ({[I]} + 1) }}.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  eapply hoare_seq.
+  { apply hoare_asgn_fwd. }
+  assert_subst.
+  assert_simpl.
+
+  eapply hoare_consequence.
+  1: apply der2_1.
+  2: apply der2_2.
+
+  apply hoare_while.
+  eapply hoare_consequence_pre.
+  + apply der2_3.
+  + pose proof hoare_asgn_bwd
+               ({[I]} * {[I]} <= m AND {[X]} = m)
+               I
+               (I + 1).
+    exact H.
+Qed.
 (** [] *)
 
 End Task5_2.
@@ -661,7 +866,13 @@ Lemma hoare_while_single: forall P Q R b c,
   Q AND NOT {[ b ]} |-- R ->
   {{ P }} While b Do c EndWhile {{ R }}.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  eapply hoare_consequence.
+  1: apply H.
+  2: apply H1.
+  apply hoare_while.
+  exact H0.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (hoare_if_then) *)
@@ -670,7 +881,15 @@ Lemma hoare_if_then: forall P Q b c,
   P AND NOT {[ b ]} |-- Q ->  
   {{ P }} If b Then c Else Skip EndIf {{ Q }}.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  eapply hoare_consequence_post.
+  + apply hoare_if.
+    apply H.
+    eapply hoare_consequence_post.
+    - apply hoare_skip.
+    - apply H0.
+  + apply derives_refl.
+Qed.
 (** [] *)
 
 End Task6.
