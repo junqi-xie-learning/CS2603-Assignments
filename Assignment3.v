@@ -55,8 +55,8 @@ Module Task1_1.
 
     1: Yes. 2: No. *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task1_1.
 (** [] *)
@@ -72,8 +72,8 @@ Module Task1_2.
 
     1: Yes. 2: No. *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task1_2.
 (** [] *)
@@ -90,8 +90,8 @@ Module Task1_3.
 
     1: Yes. 2: No. *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 End Task1_3.
 (** [] *)
@@ -104,8 +104,9 @@ End Task1_3.
 
 (** **** Exercise: 2 stars, standard (compose) *)
 
-Definition compose {A: Type} (f g: A -> A): A -> A
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition compose {A: Type} (f g: A -> A): A -> A :=
+  fun a => g (f a).
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 
 (** It is obvious that [ compose f (compose g h) ] is equivalent with
     [ compose (compose f g) h ]. Your task is to prove it in Coq. *)
@@ -113,7 +114,11 @@ Definition compose {A: Type} (f g: A -> A): A -> A
 Theorem compose_assoc: forall f g h: Z -> Z,
   Func.equiv (compose f (compose g h)) (compose (compose f g) h).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  unfold Func.equiv, compose.
+  intros.
+  reflexivity.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -138,34 +143,64 @@ Proof.
 Lemma APlus_assoc: forall a1 a2 a3,
   aexp_equiv (a1 + (a2 + a3)) ((a1 + a2) + a3).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  unfold aexp_equiv, Func.equiv.
+  intros.
+  simpl.
+  unfold Func.add.
+  lia.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (APlus_AMinus_assoc) *)
 Lemma APlus_AMinus_assoc: forall a1 a2 a3,
   aexp_equiv (a1 + (a2 - a3)) ((a1 + a2) - a3).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  unfold aexp_equiv, Func.equiv.
+  intros.
+  simpl.
+  unfold Func.add, Func.sub.
+  lia.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (AMinus_APlus_assoc) *)
 Lemma AMinus_APlus_assoc: forall a1 a2 a3,
   aexp_equiv (a1 - (a2 + a3)) ((a1 - a2) - a3).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  unfold aexp_equiv, Func.equiv.
+  intros.
+  simpl.
+  unfold Func.add, Func.sub.
+  lia.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (AMinus_AMinus_assoc) *)
 Lemma AMinus_AMinus_assoc: forall a1 a2 a3,
   aexp_equiv (a1 - (a2 - a3)) ((a1 - a2) + a3).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  unfold aexp_equiv, Func.equiv.
+  intros.
+  simpl.
+  unfold Func.add, Func.sub.
+  lia.
+Qed.
 (** [] *)
 
 Lemma AMult_assoc: forall a1 a2 a3,
   aexp_equiv (a1 * (a2 * a3)) ((a1 * a2) * a3).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  unfold aexp_equiv, Func.equiv.
+  intros.
+  simpl.
+  unfold Func.mul.
+  lia.
+Qed.
 (** [] *)
 
 (* Due to this consideration, we can always transform an expression to a
@@ -216,21 +251,49 @@ Fixpoint left_assoc (a: aexp): aexp :=
 Lemma APlus_left_assoc_sound: forall a0 a,
   aexp_equiv (APlus_left_assoc a0 a) (APlus a0 a).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction a; simpl;
+  [ reflexivity | reflexivity | .. ].
+  + rewrite IHa1.
+    rewrite APlus_assoc.
+    reflexivity.
+  + rewrite IHa1.
+    rewrite APlus_AMinus_assoc.
+    reflexivity.
+  + reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (AMinus_left_assoc_sound) *)
 Lemma AMinus_left_assoc_sound: forall a0 a,
   aexp_equiv (AMinus_left_assoc a0 a) (AMinus a0 a).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction a; simpl;
+  [ reflexivity | reflexivity | .. ].
+  + rewrite IHa1.
+    rewrite AMinus_APlus_assoc.
+    reflexivity.
+  + rewrite IHa1.
+    rewrite AMinus_AMinus_assoc.
+    reflexivity.
+  + reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (AMult_left_assoc_sound) *)
 Lemma AMult_left_assoc_sound: forall a0 a,
   aexp_equiv (AMult_left_assoc a0 a) (AMult a0 a).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction a; simpl;
+  [ reflexivity | reflexivity | .. ].
+  + reflexivity.
+  + reflexivity.
+  + rewrite IHa1.
+    rewrite AMult_assoc.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** Now, you are ready to prove our main theorem. *)
@@ -239,7 +302,19 @@ Proof.
 Theorem left_assoc_sound: forall a,
   aexp_equiv (left_assoc a) a.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction a; simpl;
+  [ reflexivity | reflexivity | .. ].
+  + rewrite APlus_left_assoc_sound.
+    rewrite IHa1, IHa2.
+    reflexivity.
+  + rewrite AMinus_left_assoc_sound.
+    rewrite IHa1, IHa2.
+    reflexivity.
+  + rewrite AMult_left_assoc_sound.
+    rewrite IHa1, IHa2.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** Besides soundness, it is critical that results of [left_assoc] are actually
@@ -281,7 +356,10 @@ Lemma APlus_left_assoc_fully_left_associative: forall a0 a,
   fully_left_associative a ->
   fully_left_associative (APlus_left_assoc a0 a).
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold fully_left_associative.
+  intros.
+  induction a; simpl; simpl in H0; tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (AMinus_left_assoc_fully_left_associative) *)
@@ -290,7 +368,10 @@ Lemma AMinus_left_assoc_fully_left_associative: forall a0 a,
   fully_left_associative a ->
   fully_left_associative (AMinus_left_assoc a0 a).
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold fully_left_associative.
+  intros.
+  induction a; simpl; simpl in H0; tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (AMult_left_assoc_fully_left_associative) *)
@@ -299,7 +380,10 @@ Lemma AMult_left_assoc_fully_left_associative: forall a0 a,
   fully_left_associative a ->
   fully_left_associative (AMult_left_assoc a0 a).
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold fully_left_associative.
+  intros.
+  induction a; simpl; simpl in H0; tauto.
+Qed.
 (** [] *)
 
 (** Lastly, please prove that results of [left_assoc] always satisfy
@@ -309,7 +393,20 @@ Proof.
 Lemma left_assoc_fully_left_associative: forall a,
   fully_left_associative (left_assoc a).
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold fully_left_associative.
+  intros.
+  induction a; simpl;
+  [ tauto | tauto | .. ].
+  + apply APlus_left_assoc_fully_left_associative.
+    apply IHa1.
+    apply IHa2.
+  + apply AMinus_left_assoc_fully_left_associative.
+    apply IHa1.
+    apply IHa2.
+  + apply AMult_left_assoc_fully_left_associative.
+    apply IHa1.
+    apply IHa2.
+Qed.
 (** [] *)
 
 (** You may wonder whether [left_assoc] is a meaningful operation. Well, it
@@ -335,8 +432,8 @@ Proof.
 
     3. They are not comparable. *)
 
-Definition my_choice_1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice_1 := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -360,8 +457,8 @@ Definition my_choice_1: Z
 
     3. They are not comparable. *)
 
-Definition my_choice_2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice_2 := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (* ################################################################# *)
@@ -387,26 +484,68 @@ Fixpoint same_structure (t1 t2: tree): Prop :=
 (** **** Exercise: 1 star, standard (same_structure_refl) *)
 Lemma same_structure_refl: Reflexive same_structure.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Reflexive.
+  intros.
+  induction x; simpl.
+  + exact I.
+  + split.
+    - exact IHx1.
+    - exact IHx2.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (same_structure_sym) *)
 Lemma same_structure_sym: Symmetric same_structure.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Symmetric.
+  intros.
+  revert y H.
+  induction x; intros.
+  + destruct y.
+    - reflexivity.
+    - simpl in H.
+      contradiction.
+  + destruct y; simpl in H.
+    { contradiction. }
+    destruct H.
+    apply IHx1 in H.
+    apply IHx2 in H0.
+    simpl.
+    tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (same_structure_trans) *)
 Lemma same_structure_trans: Transitive same_structure.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Transitive.
+  intros.
+  revert y z H H0.
+  induction x; intros; revert y H H0.
+  + induction y; intros.
+    - destruct z; exact H0.
+    - destruct z; simpl in H; contradiction.
+  + induction y; intros.
+    - destruct z; simpl in H; contradiction.
+    - destruct z; simpl in H.
+      { contradiction. }
+      destruct H, H0.
+      specialize IHx1 with y1 z1.
+      specialize IHx2 with y2 z2.
+      simpl.
+      tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (same_structure_Node_congr) *)
 Lemma same_structure_Node_congr:
   Proper (same_structure ==> eq ==> same_structure ==> same_structure) Node.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Proper, respectful.
+  intros.
+  simpl.
+  tauto.
+Qed.
 (** [] *)
 
 Fixpoint tree_reverse (t: tree): tree :=
@@ -419,7 +558,22 @@ Fixpoint tree_reverse (t: tree): tree :=
 Lemma same_structure_tree_reverse_congr:
   Proper (same_structure ==> same_structure) tree_reverse.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Proper, respectful.
+  intros.
+  revert y H.
+  induction x; intros.
+  + destruct y.
+    - reflexivity.
+    - simpl in H.
+      contradiction.
+  + destruct y; simpl in H.
+    { contradiction. }
+    - destruct H.
+      apply IHx1 in H.
+      apply IHx2 in H0.
+      simpl.
+      tauto.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
