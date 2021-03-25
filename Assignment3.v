@@ -1,7 +1,7 @@
 (* ***************************************************************** *)
 (*                                                                   *)
-(* Released: 2021/03/17.                                             *)
-(* Due: 2021/03/21, 23:59:59, CST.                                   *)
+(* Released: 2021/03/22.                                             *)
+(* Due: 2021/03/26, 23:59:59, CST.                                   *)
 (*                                                                   *)
 (* 0. Read instructions carefully before start writing your answer.  *)
 (*                                                                   *)
@@ -568,11 +568,11 @@ Proof.
       contradiction.
   + destruct y; simpl in H.
     { contradiction. }
-    - destruct H.
-      apply IHx1 in H.
-      apply IHx2 in H0.
-      simpl.
-      tauto.
+    destruct H.
+    apply IHx1 in H.
+    apply IHx2 in H0.
+    simpl.
+    tauto.
 Qed.
 (** [] *)
 
@@ -596,8 +596,8 @@ Module Task5_1.
 (** Is this function [f] a monotonic function w.r.t. the partial order [<=] on
     [A]? 1: Yes. 2: No. *)
 
-Definition my_answer_1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_1: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -605,8 +605,8 @@ Definition my_answer_1: Z
 (** Is this function [f] a continuous function w.r.t. the CPO [<=]? 1: Yes.
     2: No. *)
 
-Definition my_answer_2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_2: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -614,8 +614,8 @@ Definition my_answer_2: Z
 (** How many fixpoints does [f] have? 1: Zero. 2: Exactly one. 3: Finite but
     more than one. 4: Infinite. *)
 
-Definition my_answer_3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_3: Z := 4.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -625,8 +625,8 @@ Definition my_answer_3: Z
     The function [f] has at least one fixpoint and the singleton set [ {0} ] is
     its least fixpoint w.r.t. the order [<=]. *)
 
-Definition my_answer_4: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_4: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task5_1.
@@ -644,8 +644,8 @@ Module Task5_2.
 (** Is this function [f] a monotonic function w.r.t. the partial order [<=] on
     [A]? 1: Yes. 2: No. *)
 
-Definition my_answer_1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_1: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -653,8 +653,8 @@ Definition my_answer_1: Z
 (** Is this function [f] a continuous function w.r.t. the CPO [<=]? 1: Yes.
     2: No. *)
 
-Definition my_answer_2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_2: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -667,8 +667,8 @@ Definition my_answer_2: Z
     4: The singleton set with integer zero.
     5: None of the above. *)
 
-Definition my_answer_3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_3: Z := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** Which is the greatest fixpoint of [f] w.r.t. [<=]?
@@ -679,8 +679,8 @@ Definition my_answer_3: Z
     4: The singleton set with integer zero.
     5: None of the above. *)
 
-Definition my_answer_4: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_4: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task5_2.
@@ -703,8 +703,8 @@ Module Task5_3.
 (** Is this function [f] a monotonic function w.r.t. the partial order [<=] on
     [A]? 1: Yes. 2: No. *)
 
-Definition my_answer_1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_1: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -712,8 +712,8 @@ Definition my_answer_1: Z
 (** Is this function [f] a continuous function w.r.t. the CPO [<=]? 1: Yes.
     2: No. *)
 
-Definition my_answer_2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_2: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -726,8 +726,8 @@ Definition my_answer_2: Z
     4: The singleton set with integer zero.
     5: None of the above. *)
 
-Definition my_answer_3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_3: Z := 5.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task5_3.
@@ -793,10 +793,10 @@ End BW_FixPoint.
 
     [[
         forall d: state -> state -> Prop,
-          BinRel.equiv (BinRel.union Bot d) d
+          BinRel.equiv (BinRel.union Bot d) d.
 
         forall d: state -> state -> Prop,
-          BinRel.equiv (BinRel.union d Bot) d
+          BinRel.equiv (BinRel.union d Bot) d.
 
         forall d: state -> state -> Prop,
           BinRel.equiv (BinRel.concat d Bot) Bot.
@@ -812,6 +812,74 @@ End BW_FixPoint.
     ]]
 *)
 
+Lemma Union_bot_d: forall d: state -> state -> Prop,
+  BinRel.equiv (BinRel.union Bot d) d.
+Proof.
+  intros.
+  unfold Bot.
+  unfold BinRel.empty, BinRel.union, BinRel.equiv.
+  tauto.
+Qed.
+
+Lemma Union_d_bot: forall d: state -> state -> Prop,
+  BinRel.equiv (BinRel.union d Bot) d.
+Proof.
+  intros.
+  unfold Bot.
+  unfold BinRel.empty, BinRel.union, BinRel.equiv.
+  tauto.
+Qed.
+
+Lemma Concat_d_bot: forall d: state -> state -> Prop,
+  BinRel.equiv (BinRel.concat d Bot) Bot.
+Proof.
+  intros.
+  unfold Bot.
+  unfold BinRel.empty, BinRel.concat, BinRel.equiv.
+  unfold iff; split; intros.
+  + destruct H.
+    tauto.
+  + tauto.
+Qed.
+
+Lemma Concat_bot_d: forall d: state -> state -> Prop,
+  BinRel.equiv (BinRel.concat Bot d) Bot.
+Proof.
+  intros.
+  unfold Bot.
+  unfold BinRel.empty, BinRel.concat, BinRel.equiv.
+  unfold iff; split; intros.
+  + destruct H.
+    tauto.
+  + tauto.
+Qed.
+
+Lemma Concat_d_id: forall d: state -> state -> Prop,
+  BinRel.equiv (BinRel.concat d BinRel.id) d.
+Proof.
+  intros.
+  unfold BinRel.id, BinRel.concat, BinRel.equiv.
+  unfold iff; split; intros.
+  + destruct H; destruct H.
+    rewrite H0 in H.
+    tauto.
+  + exists b.
+    tauto.
+Qed.
+
+Lemma Concat_id_d: forall d: state -> state -> Prop,
+  BinRel.equiv (BinRel.concat BinRel.id d) d.
+Proof.
+  intros.
+  unfold BinRel.id, BinRel.concat, BinRel.equiv.
+  unfold iff; split; intros.
+  + destruct H; destruct H.
+    rewrite <- H in H0.
+    tauto.
+  + exists a.
+    tauto.
+Qed.
+
 (** **** Exercise: 2 stars, standard (FBot1_fact) *)
 
 Fact FBot1_fact: forall b d, BinRel.equiv (iter_loop_body b d 0) (FBot b d 1).
@@ -819,7 +887,12 @@ Proof.
   intros.
   simpl.
   unfold F, if_sem.
-  (* FILL IN HERE *) Admitted.
+  rewrite Concat_d_bot.
+  rewrite Concat_d_bot, Concat_d_id.
+  rewrite Union_bot_d.
+  simpl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (FBot2_fact) *)
@@ -829,7 +902,15 @@ Fact FBot2_fact: forall b d,
     (BinRel.union (iter_loop_body b d 1) (iter_loop_body b d 0))
     (FBot b d 2).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  simpl.
+  unfold F, if_sem.
+  rewrite Concat_d_bot.
+  rewrite Concat_d_bot, Concat_d_id.
+  rewrite Union_bot_d.
+  simpl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (FBot_n_fact_statement) *)
@@ -838,12 +919,24 @@ Proof.
     and [iter_loop_body]? Write down a proposition to describe this connection.
     Note that your [FBot_n_fact_statement] should have the following form:
 
-    - forall b d n, sem_equiv (...) (FBot b d n).
+    - forall b d n, BinRel.equiv (...) (FBot b d n).
 
     And you probably need to write some auxiliary definition(s) first. *)
 
-Definition FBot_n_fact_statement: Prop
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint iter_loop_union (b: bexp)
+                         (d: state -> state -> Prop)
+                         (n: nat): state -> state -> Prop :=
+  match n with
+  | O =>
+         iter_loop_body b d 0
+  | S n' =>
+         BinRel.union (iter_loop_body b d n)
+                      (iter_loop_union b d n')
+end.
+
+Definition FBot_n_fact_statement: Prop := forall b d n,
+  BinRel.equiv (iter_loop_union b d (n - 1)) (FBot b d n).
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
-(* 2021-03-17 12:19 *)
+(* 2021-03-22 18:13 *)
