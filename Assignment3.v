@@ -928,14 +928,14 @@ Fixpoint iter_loop_union (b: bexp)
                          (n: nat): state -> state -> Prop :=
   match n with
   | O =>
-         iter_loop_body b d 0
+         BinRel.empty
   | S n' =>
-         BinRel.union (iter_loop_body b d n)
+         BinRel.union (iter_loop_body b d (n - 1))
                       (iter_loop_union b d n')
 end.
 
 Definition FBot_n_fact_statement: Prop := forall b d n,
-  BinRel.equiv (iter_loop_union b d (n - 1)) (FBot b d n).
+  BinRel.equiv (iter_loop_union b d n) (FBot b d n).
 (* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
