@@ -80,7 +80,13 @@ Inductive optimize: aexp -> aexp -> Prop :=
 Example optimize_sample1: forall X Y: var,
   optimize (X + 0 * Y) X.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  eapply optimize_trans.
+  2: apply optimize_plus_0_r.
+  apply optimize_congr_APlus.
+  + apply optimize_refl.
+  + apply optimize_mult_0_l.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard: (optimize_sample2) *)
@@ -88,7 +94,13 @@ Proof.
 Example optimize_sample2: forall X Y: var,
   optimize ((0 * X) * 1) 0.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  eapply optimize_trans.
+  2: apply optimize_mult_0_l.
+  apply optimize_congr_AMult.
+  + apply optimize_mult_0_l.
+  + apply optimize_refl.
+Qed.
 (** [] *)
 
 (** The next task for you is to prove [optimize] sound. Hint: you may need to
@@ -106,7 +118,29 @@ Theorem optimize_sound: forall a1 a2,
   optimize a1 a2 ->
   aexp_equiv a1 a2.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction H.
+  + apply zero_plus_equiv.
+  + apply plus_zero_equiv.
+  + apply minus_zero_equiv.
+  + apply one_mult_equiv.
+  + apply mult_one_equiv.
+  + apply zero_mult_equiv.
+  + apply mult_zero_equiv.
+  + apply APlus_congr.
+    apply IHoptimize1.
+    apply IHoptimize2.
+  + apply AMinus_congr.
+    apply IHoptimize1.
+    apply IHoptimize2.
+  + apply AMult_congr.
+    apply IHoptimize1.
+    apply IHoptimize2.
+  + reflexivity.
+  + rewrite IHoptimize1.
+    rewrite IHoptimize2.
+    reflexivity.
+Qed.
 (** [] *)
 
 End Task1.
@@ -124,7 +158,13 @@ Example step_sample1: forall (X: var) (st: state),
   st X = 5 ->
   astep st ((1 + X) * 2) ((1 + 5) * 2).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  apply AS_Mult1.
+  apply AS_Plus2.
+  { apply AH_num. }
+  rewrite <- H.
+  apply AS_Id.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard: (step_sample2) *)
@@ -133,7 +173,13 @@ Example step_sample2: forall (X: var) (st: state),
   cstep (If (0 <= (1 + 5) * 2) Then X ::= X - 1 Else Skip EndIf, st)%imp
         (If (0 <= 6 * 2) Then X ::= X - 1 Else Skip EndIf, st)%imp.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  apply CS_IfStep.
+  apply BS_Le2.
+  { apply AH_num. }
+  apply AS_Mult1.
+  apply AS_Plus.
+Qed.
 (** [] *)
 
 End Task2.
@@ -274,8 +320,8 @@ End A3.
     an empty list, a list with singleton element, or a list with more than one
     element, e.g. [], [1;3], [2], [1;2;3]). *)
 
-Definition my_choice1: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: list Z := [2; 3].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 2 stars, standard *)
@@ -301,8 +347,8 @@ Definition my_choice1: list Z
 
     Remark: Your answer should be an ascending list of integers. *)
 
-Definition my_choice2: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: list Z := [3].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 2 stars, standard *)
@@ -328,8 +374,8 @@ Definition my_choice2: list Z
 
     Remark: Your answer should be an ascending list of integers. *)
 
-Definition my_choice3: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice3: list Z := [1].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task3.
@@ -382,7 +428,16 @@ Lemma match_com_skip_spec: forall c,
 Proof.
   assert (forall c1 c2, match_com c1 c2 -> c2 = Skip -> remove_skip c1 = Skip).
   2: { intros; eapply H; eauto. }
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction H; simpl.
+  + rewrite H0.
+    reflexivity.
+  + rewrite H.
+    apply IHmatch_com.
+    rewrite H0.
+    reflexivity.
+  + discriminate H0.
+Qed.
 
 (** **** Exercise: 4 stars, standard, optional *)
 
