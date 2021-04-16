@@ -80,7 +80,15 @@ Example mstep_example_1: forall (st: state) (X Y: var),
   (forall X0, st X0 = 0) ->
   mstep (X ::= Y, st) (Skip, st).  
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  apply MS_Ass.
+  + unfold aeval, query_var.
+    pose proof (H X).
+    pose proof (H Y).
+    rewrite H0, H1; tauto.
+  + intros.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (mstep_example_2) *)
@@ -91,7 +99,16 @@ Example mstep_example_2: forall (st1 st0: state) (X: var),
   (forall Y, X <> Y -> st0 Y = 0) ->
   mstep (X ::= X - 1, st1) (Skip, st0).  
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  apply MS_Ass.
+  + unfold aeval, Func.sub.
+    unfold query_var, constant_func.
+    rewrite H, H0; tauto.
+  + intros.
+    specialize H1 with Y.
+    specialize H2 with Y.
+    rewrite H1, H2; tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (mstep_example_3) *)
@@ -119,7 +136,76 @@ Example mstep_example_3: forall (st: Z -> state) (X: var),
   (forall n: Z, forall Y, X <> Y -> (st n) Y = 0) ->
   multi_mstep (While ! (X <= 0) Do X ::= X - 1 EndWhile, st 2) (Skip, st 0).  
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  etransitivity_1n.
+  {
+    apply MS_WhileTrue.
+    unfold beval, Sets.complement, Func.test_le.
+    unfold aeval, query_var, constant_func.
+    pose proof (H 2).
+    rewrite H1; eauto.
+  }
+  etransitivity_1n.
+  {
+    apply MS_SeqStep, MS_Ass; eauto. 
+    intros.
+    unfold aeval, Func.sub, query_var, constant_func.
+    pose proof (H 2).
+    pose proof (H0 2 Y).
+    rewrite H2, H3; eauto; simpl.
+    pose proof (H0 1 Y).
+    rewrite H4; eauto.
+  }
+  etransitivity_1n.
+  {
+    apply MS_Seq.
+  }
+  etransitivity_1n.
+  {
+    apply MS_WhileTrue.
+    unfold beval, Sets.complement, Func.test_le.
+    unfold aeval, Func.sub, query_var, constant_func.
+    pose proof (H 2).
+    rewrite H1; eauto; simpl.
+    pose proof (H 1).
+    rewrite H2; eauto.
+  }
+  etransitivity_1n.
+  {
+    apply MS_SeqStep, MS_Ass; eauto. 
+    intros.
+    unfold aeval, Func.sub, query_var, constant_func.
+    pose proof (H 2).
+    rewrite H2; eauto; simpl.
+    pose proof (H 1).
+    pose proof (H0 1 Y).
+    rewrite H3, H4; eauto; simpl.
+    pose proof (H0 0).
+    rewrite H5; eauto.
+  }
+  etransitivity_1n.
+  {
+    apply MS_Seq.
+  }
+  etransitivity_1n.
+  {
+    apply MS_WhileFalse.
+    unfold beval, Sets.complement, Func.test_le.
+    unfold aeval, Func.sub, query_var, constant_func.
+    pose proof (H 2).
+    rewrite H1; eauto; simpl.
+    pose proof (H 1).
+    rewrite H2; eauto; simpl.
+    pose proof (H 0).
+    rewrite H3; eauto; lia.
+  }
+  unfold aeval, Func.sub, query_var, constant_func.
+  pose proof (H 2).
+  rewrite H1; eauto; simpl.
+  pose proof (H 1).
+  rewrite H2; eauto; simpl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -186,7 +272,41 @@ Check multi_congr_CIf.
 Lemma One_MidStep_To_SmallStep: forall a b,
   mstep a b -> multi_cstep a b.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction H.
+  + etransitivity_n1.
+    - apply multi_congr_CAss, semantic_equiv_aexp1.
+      reflexivity.
+    - apply CS_Ass; tauto.
+  + etransitivity.
+    - apply multi_congr_CSeq, IHmstep.
+    - reflexivity.
+  + etransitivity_1n.
+    - apply CS_Seq.
+    - reflexivity.
+  + pose proof semantic_equiv_bexp1 st b.
+    destruct H0.
+    etransitivity.
+    - apply multi_congr_CIf, H0, H.
+    - etransitivity_1n; [apply CS_IfTrue | reflexivity].
+  + pose proof semantic_equiv_bexp1 st b.
+    destruct H0.
+    etransitivity.
+    - apply multi_congr_CIf, H1, H.
+    - etransitivity_1n; [apply CS_IfFalse | reflexivity].
+  + pose proof semantic_equiv_bexp1 st b.
+    destruct H0.
+    etransitivity_1n; [apply CS_While |].
+    etransitivity. 
+    - apply multi_congr_CIf, H0, H.
+    - etransitivity_1n; [apply CS_IfTrue | reflexivity].
+  + pose proof semantic_equiv_bexp1 st b.
+    destruct H0.
+    etransitivity_1n; [apply CS_While |].
+    etransitivity. 
+    - apply multi_congr_CIf, H1, H.
+    - etransitivity_1n; [apply CS_IfFalse | reflexivity].
+Qed.
 (** [] *)
 
 (** Now, from this conclusion above to our final target, we only need two
@@ -198,7 +318,15 @@ Proof.
 Theorem rt_idempotent : forall (X: Type) (R: X -> X -> Prop) (x y: X),
   clos_refl_trans (clos_refl_trans R) x y <-> clos_refl_trans R x y.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  split; intros.
+  + induction_1n H.
+    - reflexivity.
+    - rewrite IHrt in H.
+      exact H.
+  + apply rt_step.
+    exact H.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (rt_mono) *)
@@ -206,7 +334,14 @@ Theorem rt_mono : forall (X: Type) (R1 R2: X -> X -> Prop),
   (forall x y, R1 x y -> R2 x y) ->
   (forall x y, clos_refl_trans R1 x y -> clos_refl_trans R2 x y).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction_n1 H0.
+  + reflexivity.
+  + transitivity_n1 y.
+    - exact IHrt.
+    - specialize H with y y0.
+      apply H, H0.
+Qed.
 (** [] *)
 
 (** Here is our final target! *)
@@ -217,7 +352,18 @@ Theorem Multi_MidStep_To_SmallStep: forall c st1 st2,
   multi_mstep (c, st1) (Skip, st2) ->
   multi_cstep (c, st1) (Skip, st2).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction H.
+  + apply One_MidStep_To_SmallStep.
+    exact H.
+  + reflexivity.
+  + apply (rt_mono _ _ _ One_MidStep_To_SmallStep) in H.
+    apply (rt_mono _ _ _ One_MidStep_To_SmallStep) in H0.
+    apply rt_idempotent.
+    transitivity y.
+    - apply H.
+    - apply H0.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -314,7 +460,23 @@ Proof.
     specialize (H0 c c st1 st2 (H1 st1 c)); clear H1.
     tauto.
   }
-(* FILL IN HERE *) Admitted.
+
+  intros.
+  revert c1' H1.
+  induction_1n H2; intros.
+  + specialize (H0 _ _ H1).
+    rewrite H0.
+    reflexivity.
+  + unfold Simulation01_Statement in H.
+    specialize (H _ _ _ _ _ H3 H1).
+    destruct H; destruct H.
+    destruct H4.
+    - specialize (IHrt _ H).
+      injection H4 as ? ?; subst.
+      exact IHrt.
+    - specialize (IHrt _ H).
+      etransitivity_1n; eauto.
+Qed.
 (** [] *)
 
 (** Let us find such a [match_com] and prove these properties now. This is its
@@ -397,7 +559,9 @@ Inductive match_com (st: state): com -> com -> Prop :=
 (** **** Exercise: 1 star, standard (match_com_refl) *)
 Lemma match_com_refl: forall st c, match_com st c c.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction c; constructor; tauto.
+Qed.
 (** [] *)
 
 (** Second, only [Skip] can match [Skip] via [match_com]. *)
@@ -406,7 +570,10 @@ Proof.
 Lemma only_skip_matches_skip:
   forall (st : state) (c' : com), match_com st Skip c' -> c' = Skip.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** Third, and most importantly, [match_com] is a simulation relation:
@@ -467,7 +634,15 @@ Lemma MiddleStep_Simulate_SmallStep_CS_AssStep:
          match_com st (X ::= a') c2' /\
          mstep_or_not (c2, st) (c2', st).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H0; subst.
+  exists (X ::= a2).
+  split; constructor.
+  + apply aeval_preserve in H.
+    rewrite <- H, <- H4.
+    reflexivity.
+  + reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (MiddleStep_Simulate_SmallStep_CS_Ass) *)
@@ -497,7 +672,16 @@ Lemma mstep_or_not_congr_CSeq: forall c1 st c1' st' c2,
   mstep_or_not (c1, st) (c1', st') ->
   mstep_or_not (c1;; c2, st) (c1';; c2, st').
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H.
+  + unfold mstep_or_not; left.
+    injection H0 as ? ?.
+    rewrite H0, H1.
+    reflexivity.
+  + unfold mstep_or_not; right.
+    apply MS_SeqStep.
+    exact H0.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (MiddleStep_Simulate_SmallStep_CS_SeqStep) *)
@@ -515,7 +699,17 @@ Lemma MiddleStep_Simulate_SmallStep_CS_SeqStep:
         match_com st' (c1_1';; c1_2) c2' /\
         mstep_or_not (c2, st) (c2', st')).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H1; subst.
+  apply H0 in H5.
+  destruct H5, H2.
+  exists (x;; c1_2).
+  split.
+  + constructor.
+    exact H2.
+  + eapply mstep_or_not_congr_CSeq in H3.
+    exact H3.
+Qed.
 (** [] *)
 
 (** For the [CS_Seq] case, you may need [match_com]'s reflexivity, which you
@@ -530,7 +724,16 @@ Lemma MiddleStep_Simulate_SmallStep_CS_Seq:
         match_com st c1_2 c2' /\
         mstep_or_not (c2, st) (c2', st).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H; subst.
+  exists c1_2.
+  split.
+  + apply match_com_refl.
+  + unfold mstep_or_not; right.
+    apply only_skip_matches_skip in H3.
+    rewrite H3.
+    apply MS_Seq.
+Qed.
 (** [] *)
 
 (** Each case of [CS_IfStep], [CS_IfTrue] and [CS_IfFalse] has two sub-cases,
@@ -548,7 +751,21 @@ Lemma MiddleStep_Simulate_SmallStep_CS_IfStep:
         match_com st (If b' Then c1_1 Else c1_2 EndIf) c2' /\
         mstep_or_not (c2, st) (c2', st).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H0; subst.
+  + exists (If b2 Then c1_1 Else c1_2 EndIf).
+    split; constructor.
+    - apply beval_preserve in H.
+      rewrite <- H, <- H5.
+      reflexivity.
+    - reflexivity.
+  + exists (While b2 Do c EndWhile).
+    split; constructor.
+    - apply beval_preserve in H.
+      rewrite <- H, <- H5.
+      reflexivity.
+    - reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (MiddleStep_Simulate_SmallStep_CS_IfTrue) *)
@@ -559,7 +776,23 @@ Lemma MiddleStep_Simulate_SmallStep_CS_IfTrue:
       exists c2',
         match_com st c1_1 c2' /\ mstep_or_not (c2, st) (c2', st).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H; subst.
+  + exists c1_1.
+    split.
+    - apply match_com_refl.
+    - unfold mstep_or_not; right.
+      constructor.
+      rewrite <- H4.
+      constructor.
+  + exists (c;; While b2 Do c EndWhile).
+    split.
+    - apply match_com_refl.
+    - unfold mstep_or_not; right.
+      constructor.
+      rewrite <- H4.
+      constructor.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (MiddleStep_Simulate_SmallStep_CS_IfFalse) *)
@@ -570,7 +803,23 @@ Lemma MiddleStep_Simulate_SmallStep_CS_IfFalse:
       exists c2',
         match_com st c1_2 c2' /\ mstep_or_not (c2, st) (c2', st).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H; subst.
+  + exists c1_2.
+    split.
+    - apply match_com_refl.
+    - unfold mstep_or_not; right.
+      constructor.
+      rewrite <- H4.
+      tauto.
+  + exists (Skip).
+    split.
+    - apply match_com_refl.
+    - unfold mstep_or_not; right.
+      constructor.
+      rewrite <- H4.
+      tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (MiddleStep_Simulate_SmallStep_CS_While) *)
@@ -585,7 +834,15 @@ Lemma MiddleStep_Simulate_SmallStep_CS_While:
            c2' /\
          mstep_or_not (c2, st) (c2', st).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H; subst.
+  exists (While b Do c EndWhile).
+  split.
+  + apply MatIfWhile.
+    reflexivity.
+  + unfold mstep_or_not; left.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** Now, you can connects all induction steps above together. *)
@@ -596,7 +853,16 @@ Proof.
   unfold Simulation01_Statement.
   intros.
   revert c2 H; induction_cstep H0; intros.
-(* FILL IN HERE *) Admitted.
+
+  + eapply MiddleStep_Simulate_SmallStep_CS_AssStep; eauto.
+  + eapply MiddleStep_Simulate_SmallStep_CS_Ass; eauto.
+  + eapply MiddleStep_Simulate_SmallStep_CS_SeqStep; eauto.
+  + eapply MiddleStep_Simulate_SmallStep_CS_Seq; eauto.
+  + eapply MiddleStep_Simulate_SmallStep_CS_IfStep; eauto.
+  + eapply MiddleStep_Simulate_SmallStep_CS_IfTrue; eauto.
+  + eapply MiddleStep_Simulate_SmallStep_CS_IfFalse; eauto.
+  + eapply MiddleStep_Simulate_SmallStep_CS_While; eauto.
+Qed.
 (** [] *)
 
 (** ... and use [Multi_SmallStep_To_MidStep_strategy] to prove
@@ -606,7 +872,13 @@ Theorem Multi_SmallStep_To_MidStep: forall c st1 st2,
   multi_cstep (c, st1) (Skip, st2) ->
   multi_mstep (c, st1) (Skip, st2).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  eapply Multi_SmallStep_To_MidStep_strategy.
+  + apply MiddleStep_Simulate_SmallStep.
+  + apply match_com_refl.
+  + apply only_skip_matches_skip.
+  + exact H.
+Qed.
 (** [] *)
 
 End MiddleStep.
@@ -628,8 +900,8 @@ Module Task4.
 
     1: Yes. 2: No. *)
 
-Definition my_choice1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -645,8 +917,8 @@ Definition my_choice1: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -662,8 +934,8 @@ Definition my_choice2: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice3: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -676,8 +948,8 @@ Definition my_choice3: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice4: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice4: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task4.
@@ -703,8 +975,8 @@ Module Task5.
 
     1: Yes. 2: No. *)
 
-Definition my_choice1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -722,8 +994,8 @@ Definition my_choice1: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -737,8 +1009,8 @@ Definition my_choice2: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice3: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -758,8 +1030,8 @@ Definition my_choice3: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice4: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice4: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task5.
@@ -787,7 +1059,12 @@ Lemma new_if_rule_sound: forall P b c1 c2 Q,
   |== {{ P }} c2 {{ Q }} ->
   |== {{ P }} If b Then c1 Else c2 EndIf {{ Q }}.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold valid.
+  intros.
+  rewrite ceval_CIf in H2.
+  unfold if_sem, BinRel.union, BinRel.concat, BinRel.test_rel in H2.
+  destruct H2; destruct H2; destruct H2; destruct H2; subst; firstorder.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -797,8 +1074,8 @@ Proof.
 
     1: Yes. 2: No. *)
 
-Definition my_choice1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 2 stars, standard *)
@@ -813,8 +1090,8 @@ Definition my_choice1: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 2 stars, standard *)
@@ -829,8 +1106,8 @@ Definition my_choice2: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice3: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task6.
