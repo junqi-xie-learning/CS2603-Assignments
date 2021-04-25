@@ -29,6 +29,7 @@
 (*      assignment? Your answer to this question will                *)
 (*      NOT affect your grade.                                       *)
 (*      (* FILL IN YOUR ANSWER HERE AS COMMENT *)                    *)
+(*      (* Software Foundations Volume 5 *)                          *)
 (*                                                                   *)
 (* ***************************************************************** *)
 
@@ -63,8 +64,8 @@ Import Abstract_Pretty_Printing.
     This is a multiple-choice problem. You should use an ascending Coq list to
     describe your answer, e.g. [1; 2; 3], [1; 3], [2]. *)
 
-Definition my_choice1: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: list Z := [1; 2; 3].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 3 stars, standard *)
@@ -85,8 +86,8 @@ Definition my_choice1: list Z
     This is a multiple-choice problem. You should use an ascending Coq list to
     describe your answer, e.g. [1; 2; 3], [1; 3], [2]. *)
 
-Definition my_choice2: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: list Z := [1; 3].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task1.
@@ -131,8 +132,8 @@ Import Abstract_Pretty_Printing.
 
       Is the explanation above correct? 1. Yes. 2. No. *)
 
-Definition my_choice1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -181,8 +182,8 @@ Definition my_choice1: Z
     2. The sequence rule.
     3. The assgnment rule and the sequence rule. *)
 
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -194,8 +195,8 @@ Definition my_choice2: Z
        forall p v, data_at Tsh tint v p |--
                    data_at Tsh tint v p * data_at Tsh tint v p  *)
 
-Definition my_choice3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice3: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task2.
@@ -293,7 +294,11 @@ Arguments lseg sigma x y : simpl never.
 Lemma singleton_lseg: forall (a: Z) (x y: val),
   data_at Tsh t_struct_list (Vint (Int.repr a), y) x |-- lseg [a] x y.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  unfold lseg.
+  Exists y.
+  entailer!.
+Qed.
 (** [] *)
 
 (** In the next lemma, try to understand how to use [sep_apply]. *)
@@ -317,14 +322,37 @@ Qed.
 Lemma lseg_lseg: forall (s1 s2: list Z) (x y z: val),
   lseg s1 x y * lseg s2 y z |-- lseg (s1 ++ s2) x z.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  revert x; induction s1; intros.
+  + unfold lseg; fold lseg.
+    rewrite app_nil_l.
+    entailer!.
+  + rewrite <- app_comm_cons.
+    unfold lseg; fold lseg.
+    Intros u.
+    Exists u.
+    sep_apply IHs1.
+    entailer!.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (lseg_list) *)
 Lemma lseg_list: forall (s1 s2: list Z) (x y: val),
   lseg s1 x y * listrep s2 y |-- listrep (s1 ++ s2) x.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  revert x; induction s1; intros.
+  + unfold lseg; fold lseg.
+    rewrite app_nil_l.
+    entailer!.
+  + rewrite <- app_comm_cons.
+    unfold lseg; fold lseg.
+    unfold listrep; fold listrep.
+    Intros u.
+    Exists u.
+    sep_apply IHs1.
+    entailer!.
+Qed.
 (** [] *)
 
 (** Try to use prove the following assertion derivation use the lemmas above.
@@ -336,7 +364,10 @@ Example lseg_ex0: forall s1 s2 s3 x y z,
 Proof.
   intros.
   sep_apply (lseg_lseg s2 s3 y z nullval).
-  (* FILL IN HERE *) Admitted.
+  sep_apply lseg_nullval.
+  sep_apply lseg_list.
+  entailer!.
+Qed.
 (** [] *)
 
 (** Using similar proof techniques, you can prove the following two entailments.
@@ -347,7 +378,11 @@ Example lseg_ex1: forall (s1a: list Z) (s1b: Z) (x y z: val),
   lseg s1a x y * data_at Tsh t_struct_list (Vint (Int.repr s1b), z) y
     |-- lseg (s1a ++ [s1b]) x z.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  sep_apply singleton_lseg.
+  sep_apply (lseg_lseg s1a [s1b] x y z).
+  entailer!.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (lseg_ex2) *)
@@ -355,7 +390,11 @@ Example lseg_ex2: forall (s1a: list Z) (s1b: Z) (s2: list Z) (x y z: val),
   lseg s1a x y * data_at Tsh t_struct_list (Vint (Int.repr s1b), z) y *
   listrep s2 z |-- listrep ((s1a ++ [s1b]) ++ s2) x.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  sep_apply lseg_ex1.
+  sep_apply lseg_list.
+  entailer!.
+Qed.
 (** [] *)
 
 (** Now, you are going to prove [sumlist] correct. The following lemmas are
@@ -366,12 +405,12 @@ Lemma listrep_local_facts:
    listrep sigma p |--
    !! (is_pointer_or_null p /\ (p=nullval <-> sigma=nil)).
 Proof.
-intros.
-revert p; induction sigma; 
-  unfold listrep; fold listrep; intros; normalize.
-apply prop_right; split; simpl; auto. intuition.
-entailer!.
-split; intro. subst p. destruct H; contradiction. inv H2.
+  intros.
+  revert p; induction sigma; 
+    unfold listrep; fold listrep; intros; normalize.
+  apply prop_right; split; simpl; auto. intuition.
+  entailer!.
+  split; intro. subst p. destruct H; contradiction. inv H2.
 Qed.
 
 Hint Resolve listrep_local_facts : saturate_local.
@@ -380,12 +419,12 @@ Lemma listrep_valid_pointer:
   forall sigma p,
    listrep sigma p |-- valid_pointer p.
 Proof.
- destruct sigma; unfold listrep; fold listrep;
- intros; normalize.
- auto with valid_pointer.
- apply sepcon_valid_pointer1.
- apply data_at_valid_ptr; auto.
- simpl;  computable.
+  destruct sigma; unfold listrep; fold listrep;
+  intros; normalize.
+  auto with valid_pointer.
+  apply sepcon_valid_pointer1.
+  apply data_at_valid_ptr; auto.
+  simpl; computable.
 Qed.
 
 Hint Resolve listrep_valid_pointer : valid_pointer.
@@ -393,10 +432,110 @@ Hint Resolve listrep_valid_pointer : valid_pointer.
 Definition Gprog : funspecs :=
   ltac:(with_library prog [ append_spec ]).
 
+(** Remark. The following proof strategy is from << Software Foundation >>
+volume 5. *)
+
+(** **** Exercise: 1 star, standard (listrep_null) *)
+Lemma listrep_null: forall contents x,
+  x = nullval ->
+  listrep contents x = !! (contents=nil) && emp.
+Proof.
+  intros.
+  apply pred_ext.
+  + entailer!.
+    - apply H0; reflexivity.
+    - destruct H0; clear H0.
+      rewrite H.
+      2: reflexivity.
+      unfold listrep.
+      entailer!.
+  + unfold listrep.
+    entailer!.
+Qed.
+(** [] *)
+
+(** **** Exercise: 1 star, standard (listrep_nonnull) *)
+Lemma listrep_nonnull: forall contents x,
+  x <> nullval ->
+  listrep contents x =
+    EX h: Z, EX hs: list Z, EX y: val,
+      !! (contents = h :: hs) &&
+        data_at Tsh t_struct_list (Vint (Int.repr h), y) x  *  listrep hs y.
+Proof.
+  intros.
+  apply pred_ext; entailer!.
+  + induction contents.
+    - unfold listrep at 1.
+      Intros.
+      contradiction.
+    - unfold listrep; fold listrep.
+      Intros y.
+      Exists a contents y.
+      entailer!.
+  + unfold listrep; fold listrep.
+    Exists y.
+    entailer!.
+Qed.
+(** [] *)
+
 (** **** Exercise: 4 stars, standard (body_append) *)
 Lemma body_append: semax_body Vprog Gprog f_append append_spec.
 Proof.
-(* FILL IN HERE *) Admitted.
+  start_function.
+  forward_if. (* if (x == NULL) *)
+  + (* If-then *)
+    rewrite (listrep_null _ x) by auto.
+    forward.
+    rewrite app_nil_l.
+    Exists y.
+    entailer!.
+  + (* If-else *)
+    rewrite (listrep_nonnull _ x) by auto.
+    Intros h r u.
+    forward. (* t = x; *)
+    forward. (* u = t -> tail; *)
+
+    forward_while
+        ( EX s1a: list Z, EX b: Z, EX s1c: list Z, EX t: val, EX u: val,
+          PROP (s1 = s1a ++ b :: s1c)
+          LOCAL (temp _x x; temp _t t; temp _u u; temp _y y)
+          SEP (lseg s1a x t;
+               data_at Tsh t_struct_list (Vint (Int.repr b), u) t;
+               listrep s1c u;
+               listrep s2 y))%assert.
+    - (* current assertion implies loop invariant *)
+      Exists (@nil Z) h r x u.
+      subst s1.
+      entailer!.
+      unfold lseg; entailer!.
+    - (* loop test is safe to execute *)
+      entailer!.
+    - (* loop body preserves invariant *)
+      clear h r u H0; rename u0 into u.
+      rewrite (listrep_nonnull _ u) by auto.
+      Intros c s1d z.
+      forward. (* t = u; *)
+      forward. (* u = t -> tail; *)
+
+      Exists ((s1a ++ b :: nil), c, s1d, u, z).
+      unfold fst, snd.
+      entailer!.
+      * rewrite app_assoc_reverse.
+        simpl.
+        reflexivity.
+      * apply lseg_ex1.
+    - (* after the loop *)
+      clear h r u H0; rename u0 into u.
+      rewrite (listrep_null s1c) by auto.
+      Intros.
+      subst s1c.
+
+      forward.
+      forward.
+      Exists x.
+      entailer!.
+      apply lseg_ex2.
+Qed.
 (** [] *)
 
 End append.
