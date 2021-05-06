@@ -121,35 +121,62 @@ Definition sem_equiv (d1 d2: state -> Z -> state -> Prop): Prop :=
 
 Lemma sem_equiv_refl: Reflexive sem_equiv.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Reflexive, sem_equiv.
+  intros.
+  reflexivity.
+Qed.
 (** [] *)
   
 (** **** Exercise: 1 star, standard (sem_equiv_sym) *)
 
 Lemma sem_equiv_sym: Symmetric sem_equiv.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Symmetric, sem_equiv.
+  intros.
+  rewrite H.
+  reflexivity.
+Qed.
 (** [] *)
   
 (** **** Exercise: 1 star, standard (sem_equiv_trans) *)
 
 Lemma sem_equiv_trans: Transitive sem_equiv.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Transitive, sem_equiv.
+  intros.
+  rewrite H, H0.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (seq_sem_equiv) *)
 
 Lemma seq_sem_equiv: Proper (sem_equiv ==> sem_equiv ==> sem_equiv) seq_sem.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Proper, respectful.
+  unfold sem_equiv, seq_sem.
+  intros; split; intros.
+  + destruct H1 as [t1 [t2 [st0 [? [? ?]]]]].
+    exists t1, t2, st0.
+    rewrite <- H, <- H0.
+    tauto.
+  + destruct H1 as [t1 [t2 [st0 [? [? ?]]]]].
+    exists t1, t2, st0.
+    rewrite H, H0.
+    tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (union_sem_equiv) *)
 
 Lemma union_sem_equiv: Proper (sem_equiv ==> sem_equiv ==> sem_equiv) union_sem.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Proper, respectful.
+  unfold sem_equiv, union_sem.
+  intros.
+  rewrite H, H0.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (omega_union_sem_equiv) *)
@@ -158,14 +185,29 @@ Lemma omega_union_sem_equiv: forall d1 d2: nat -> state -> Z -> state -> Prop,
   (forall n: nat, sem_equiv (d1 n) (d2 n)) ->
   sem_equiv (omega_union_sem d1) (omega_union_sem d2).  
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold sem_equiv, omega_union_sem.
+  intros; split; intros.
+  + destruct H0 as [n ?].
+    exists n.
+    rewrite <- H.
+    exact H0.
+  + destruct H0 as [n ?].
+    exists n.
+    rewrite H.
+    exact H0.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (test_sem_equiv) *)
 
 Lemma test_sem_equiv: Proper (Sets.equiv ==> sem_equiv) test_sem.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Proper, respectful.
+  unfold Sets.equiv, sem_equiv, test_sem.
+  intros.
+  rewrite H.
+  reflexivity.
+Qed.
 (** [] *)
 
 Existing Instances sem_equiv_refl
@@ -212,8 +254,8 @@ Qed.
     Hint: this is a multiple-choice problem. You should use an ascending Coq
     list to describe your answer, e.g. [1; 2; 3; 4], [1; 3], [2]. *)
 
-Definition com_equiv_refl_uses: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition com_equiv_refl_uses: list Z := [1].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 Lemma com_equiv_sym: Symmetric com_equiv.
@@ -234,8 +276,8 @@ Qed.
 
     3. Transitivity, [sem_equiv_trans]. *)
 
-Definition com_equiv_sym_uses: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition com_equiv_sym_uses: list Z := [1; 2; 3].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 Lemma com_equiv_trans: Transitive com_equiv.
@@ -256,8 +298,8 @@ Qed.
 
     3. Transitivity, [sem_equiv_trans]. *)
 
-Definition com_equiv_trans_uses: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition com_equiv_trans_uses: list Z := [1; 2; 3].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (* ################################################################# *)
@@ -281,7 +323,16 @@ Qed.
 Lemma CAss_congr: forall (X: var),
   Proper (aexp_equiv ==> com_equiv) (CAss X).
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Proper, respectful.
+  unfold aexp_equiv, com_equiv.
+  intros X E E' ?.
+  simpl.
+  unfold asgn_sem.
+  intros st1 t st2.
+  unfold Func.equiv in H.
+  rewrite H.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (CIf_congr) *)
@@ -289,7 +340,15 @@ Proof.
 Lemma CIf_congr:
   Proper (bexp_equiv ==> com_equiv ==> com_equiv ==> com_equiv) CIf.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Proper, respectful.
+  unfold bexp_equiv, com_equiv.
+  intros b b' ? c1 c1' ? c2 c2' ?.
+  simpl.
+  unfold if_sem.
+  simpl.
+  rewrite H, H0, H1.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (CWhile_congr) *)
@@ -297,7 +356,19 @@ Proof.
 Lemma CWhile_congr:
   Proper (bexp_equiv ==> com_equiv ==> com_equiv) CWhile.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold Proper, respectful.
+  unfold bexp_equiv, com_equiv.
+  intros b b' ? c c' ?.
+  simpl.
+  unfold loop_sem.
+  apply omega_union_sem_equiv.
+  intros.
+  induction n; simpl.
+  + rewrite H.
+    reflexivity.
+  + rewrite IHn, H, H0.
+    reflexivity.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -329,7 +400,10 @@ Notation "'NOT' P" := (AssnNot P) (at level 73, right associativity).
 Lemma AND_comm: forall (P Q: Assertion) (st: state),
   (P AND Q) st -> (Q AND P) st.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold AssnAnd.
+  intros.
+  tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (AND_classic) *)
@@ -337,7 +411,10 @@ Proof.
 Lemma AND_classic: forall (P Q: Assertion) (st: state),
   P st -> (P AND Q) st \/ (P AND NOT Q) st.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold AssnAnd, AssnNot.
+  intros.
+  tauto.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -372,7 +449,15 @@ Lemma hoare_seq_sound: forall P c1 Q c2 R,
   |== {{ Q }} c2 {{ R }} ->
   |== {{ P }} c1 ;; c2 {{ R }}.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold valid.
+  intros.
+  simpl in H2.
+  unfold seq_sem in H2.
+  destruct H2 as [t1 [t1' [st1' [? [? ?]]]]].
+  specialize (H _ _ _ H1 H2).
+  specialize (H0 _ _ _ H H3).
+  exact H0.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (hoare_if_sound) *)
@@ -387,7 +472,27 @@ Lemma hoare_if_sound: forall P b c1 c2 Q,
   |== {{ P AND NOT {[b]} }} c2 {{ Q }} ->
   |== {{ P }} If b Then c1 Else c2 EndIf {{ Q }}.
 Proof.
-(* FILL IN HERE *) Admitted.
+  unfold valid.
+  intros.
+  simpl in H2.
+  unfold if_sem in H2.
+  unfold union_sem,
+         seq_sem,
+         test_sem in H2.
+  destruct H2 as [H2 | H2].
+  destruct H2 as [t1 [t1' [st1' [[? ?] ?]]]]; subst st1'.
+  + apply H with st1 t1'.
+    - unfold AssnAnd, AssnDenote.
+      tauto.
+    - tauto.
+  + simpl in H2.
+    unfold Sets.complement in H2.
+    destruct H2 as [t1 [t1' [st1' [[? ?] ?]]]]; subst st1'.
+    apply H0 with st1 t1'.
+    - unfold AssnAnd, AssnNot, AssnDenote.
+      tauto.
+    - tauto.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -405,8 +510,8 @@ Proof.
 
     1: Yes. 2: No. *)
 
-Definition my_choice61: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice61: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -419,8 +524,8 @@ Definition my_choice61: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice62: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice62: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -433,8 +538,8 @@ Definition my_choice62: Z
 
     1: Yes. 2: No. *)
 
-Definition my_choice63: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice63: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (* ################################################################# *)
@@ -453,8 +558,8 @@ Definition my_choice63: Z
 
     - 3: a proof about C program's small step semantics. *)
 
-Definition my_choice71: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice71: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -470,8 +575,8 @@ Definition my_choice71: Z
 
     - 3. Nothing is wrong. *)
 
-Definition my_choice72: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice72: Z := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -489,8 +594,8 @@ Definition my_choice72: Z
     
     - 2. No. *)
 
-Definition my_choice73: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice73: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (* 2021-04-28 20:03 *)
