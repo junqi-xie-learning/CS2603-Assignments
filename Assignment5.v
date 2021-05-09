@@ -948,7 +948,7 @@ Definition my_choice3: Z := 2.
 
     1: Yes. 2: No. *)
 
-Definition my_choice4: Z := 1.
+Definition my_choice4: Z := 2.
 (* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
