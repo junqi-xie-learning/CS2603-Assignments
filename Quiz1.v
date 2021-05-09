@@ -298,7 +298,7 @@ Qed.
 
     3. Transitivity, [sem_equiv_trans]. *)
 
-Definition com_equiv_trans_uses: list Z := [1; 2; 3].
+Definition com_equiv_trans_uses: list Z := [1; 3].
 (* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
@@ -575,7 +575,7 @@ Definition my_choice71: Z := 1.
 
     - 3. Nothing is wrong. *)
 
-Definition my_choice72: Z := 3.
+Definition my_choice72: Z := 1.
 (* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
