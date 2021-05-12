@@ -78,13 +78,19 @@ Definition sample_com_2 (X: var): com :=
 (** **** Exercise: 1 star, standard *)
 Fact sample_com_1_legal: forall X, legal (sample_com_1 X).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  simpl.
+  tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
 Fact sample_com_2_legal: forall X, ~ legal (sample_com_2 X).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  simpl.
+  tauto.
+Qed.
 (** [] *)
 
 (** This definition of [legal] is syntactic. We can also define its semantic
@@ -102,14 +108,28 @@ Definition sem_legal (c: com): Prop :=
 Lemma BinRel_concat_empty: forall {A B C} (R: A -> B -> Prop),
   BinRel.equiv (BinRel.concat R (@BinRel.empty B C)) BinRel.empty.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  unfold BinRel.equiv, BinRel.concat, BinRel.empty.
+  intros; split; intros.
+  + destruct H as [? [? ?]].
+    exact H0.
+  + contradiction.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (BinRel_union_empty) *)
 Lemma BinRel_union_empty: forall {A B} (R: A -> B -> Prop),
   BinRel.equiv (BinRel.union R BinRel.empty) R.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  unfold BinRel.equiv, BinRel.union, BinRel.empty.
+  intros; split; intros.
+  + destruct H.
+    - exact H.
+    - contradiction.
+  + left.
+    exact H.
+Qed.
 (** [] *)
 
 (** Hint: remember that [rewrite] can be used for [BinRel.equiv] and may
@@ -119,7 +139,35 @@ Proof.
 Lemma legal_sem_legal: forall c,
   legal c -> sem_legal c.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction c; unfold sem_legal; simpl.
+  + split; reflexivity.
+  + split; reflexivity.
+  + destruct H.
+    specialize (IHc1 H).
+    specialize (IHc2 H0).
+    clear H H0.
+    unfold sem_legal in IHc1, IHc2.
+    destruct IHc1, IHc2.
+    rewrite H, H0, H1, H2.
+    split;
+    rewrite BinRel_concat_empty, BinRel_union_empty;
+    reflexivity.
+  + destruct H.
+    specialize (IHc1 H).
+    specialize (IHc2 H0).
+    clear H H0.
+    unfold sem_legal in IHc1, IHc2.
+    destruct IHc1, IHc2.
+    rewrite H, H0, H1, H2.
+    unfold BinRel.test_rel, Sets.complement.
+    split;
+    rewrite BinRel_concat_empty, BinRel_concat_empty, BinRel_union_empty;
+    reflexivity.
+  + split; reflexivity.
+  + destruct H.
+  + destruct H.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard *)
@@ -127,8 +175,8 @@ Proof.
 (** Is it true that every semantically legal command is also syntactically 
     legal? 1. Yes. 2. No. *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (* ################################################################# *)
@@ -203,7 +251,11 @@ Lemma si_cstep_cstep: forall s c st c' st',
   S0.si_cstep (c, st) (c', st') ->
   cstep (c, s, st) (c', s, st').
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction_cstep H;
+  constructor;
+  try tauto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (S0_cstep_cstep) *)
@@ -211,7 +263,11 @@ Lemma S0_cstep_cstep: forall c s st c' s' st',
   S0.cstep (c, s, st) (c', s', st') ->
   cstep (c, s, st) (c', s', st').
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction_cstep H;
+  [ apply si_cstep_cstep | constructor.. ];
+  try tauto.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
@@ -235,8 +291,8 @@ Module Task3.
        {{ {[ X ]} = n - 1 }}
 *)
 
-Definition my_choice1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -262,8 +318,8 @@ Definition my_choice1: Z
     1. Yes. 2. No.
 *)
 
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -289,8 +345,8 @@ Definition my_choice2: Z
     1. Yes. 2. No.
 *)
 
-Definition my_choice3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice3: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task3.
@@ -319,8 +375,8 @@ Module Task4.
     1. Yes. 2. No.
 *)
 
-Definition my_choice1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -344,8 +400,8 @@ Definition my_choice1: Z
     1. Yes. 2. No.
 *)
 
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task4.
@@ -382,8 +438,8 @@ Definition set_sample_2: Z -> Prop :=
     2. All odd numbers.
     3. All integers. *)
 
-Definition my_choice1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -396,8 +452,8 @@ Definition my_choice1: Z
     2. All odd numbers.
     3. All integers. *)
 
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -410,8 +466,8 @@ Definition my_choice2: Z
     2. All integers outside [set_sample_2].
     3. All integers. *)
 
-Definition my_choice3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice3: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task5.
@@ -431,8 +487,8 @@ Module Task6.
 
     1. Yes. 2. No. *)
 
-Definition my_choice1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -444,8 +500,8 @@ Definition my_choice1: Z
 
     1. Yes. 2. No. *)
 
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -457,8 +513,8 @@ Definition my_choice2: Z
 
     1. Yes. 2. No. *)
 
-Definition my_choice3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice3: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -470,8 +526,8 @@ Definition my_choice3: Z
 
     1. Yes. 2. No. *)
 
-Definition my_choice4: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice4: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task6.
