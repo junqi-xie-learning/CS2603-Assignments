@@ -59,6 +59,18 @@ Definition intersect {A: Type} (X Y: A -> Prop) := fun a => X a /\ Y a.
 
 Definition complement {A: Type} (X: A -> Prop) := fun a => ~ X a.
 
+Definition union {A: Type} (X Y: A -> Prop): A -> Prop :=
+  fun a => X a \/ Y a.
+
+Definition omega_union {A} (X: nat -> A -> Prop): A -> Prop :=
+  fun a => exists n, X n a.
+
+Definition infinite_union {A} (X: (A -> Prop) -> Prop): A -> Prop :=
+  fun a => exists S, X S /\ S a.
+
+Definition omega_intersection {A} (X: nat -> A -> Prop): A -> Prop :=
+  fun a => forall n, X n a.
+
 Definition equiv {A: Type} (X Y: A -> Prop): Prop :=
   forall a, X a <-> Y a.
 
@@ -274,6 +286,9 @@ Definition equiv {A B: Type} (r1 r2: A -> B -> Prop): Prop :=
 
 Definition le {A B: Type} (r1 r2: A -> B -> Prop): Prop :=
   forall a b, r1 a b -> r2 a b.
+
+Definition dia {A B} (F: A -> B -> Prop) (X: B -> Prop): A -> Prop :=
+  fun a => exists b, F a b /\ X b.
 
 End BinRel.
 
@@ -5629,4 +5644,4 @@ Admitted.
 
 End OneBinRel_FOL.
 
-(* 2021-03-29 09:49 *)
+(* 2021-05-17 20:12 *)
