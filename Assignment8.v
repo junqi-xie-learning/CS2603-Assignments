@@ -158,8 +158,13 @@ Parameter X: var.
     taken since an error occurs).
 *)
 
-Definition my_answer_1_1: list mexp
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_1_1: list mexp := 
+  [ (P == 0) && (X && (X + 1));
+    (0 == 0) && (X && (X + 1));
+    MTrue && (X && (X + 1));
+    X && (X + 1);
+    1 && (X + 1) ]
+.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard *)
@@ -182,8 +187,12 @@ Definition my_answer_1_1: list mexp
     taken since an error occurs).
 *)
 
-Definition my_answer_1_2: list mexp
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_1_2: list mexp :=
+  [ (P == 0) && (X && (X + 1));
+    (1 == 0) && (X && (X + 1));
+    MFalse && (X && (X + 1));
+    MFalse ]
+.
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -192,8 +201,7 @@ Definition my_answer_1_2: list mexp
     1. Yes. 2. No.
 *)
 
-Definition my_answer_1_3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_1_3: Z := 2.
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -202,8 +210,7 @@ Definition my_answer_1_3: Z
     1. Yes. 2. No.
 *)
 
-Definition my_answer_1_4: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_1_4: Z := 2.
 (** [] *)
 
 Import ListNotations.
@@ -229,8 +236,7 @@ Import ListNotations.
     This is a multiple-choice problem. You should use an ascending Coq list to
     describe your answer, e.g. [1; 2; 3], [1; 3], [2]. *)
 
-Definition my_answer_1_5: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_1_5: list Z := [2].
 (** [] *)
 
 End Task1.
@@ -267,8 +273,8 @@ Module Task2.
     task is true for executing [c] from [st] according to the denotational
     semantics? *)
 
-Definition my_answer_2_1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_2_1: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -285,8 +291,8 @@ Definition my_answer_2_1: Z
     task is true for executing [c] from [st] according to the small step
     semantics? *)
 
-Definition my_answer_2_2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_2_2: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -306,8 +312,8 @@ Definition my_answer_2_2: Z
     task is true for executing [c] from [st] according to the small step
     semantics? *)
 
-Definition my_answer_2_3: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_2_3: Z := 4.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -327,8 +333,8 @@ Definition my_answer_2_3: Z
     task is true for executing [c] from [st] according to the denotational
     semantics? *)
 
-Definition my_answer_2_4: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_answer_2_4: Z := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task2.
@@ -507,7 +513,14 @@ Lemma multi_congr_AAddr: forall st a a',
   multi_astepL st a a' ->
   multi_astepR st (AAddr a) (AAddr a').  
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  induction_1n H.
+  + reflexivity.
+  + etransitivity_1n.
+    - constructor.
+      exact H.
+    - exact IHrt.
+Qed.
 (** [] *)
 
 (** How to formally state the connection between the denotational semantics and
@@ -529,7 +542,14 @@ Lemma semantic_equiv_aexp_AAddr: forall st a
   (IH: forall n: Z, aevalL a st = Some n -> multi_astepL st a (ADeref (ANum n))),
   (forall n: Z, aevalR (AAddr a) st = Some n -> multi_astepR st (AAddr a) (ANum n)).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  simpl in H.
+  specialize (IH n H).
+  apply multi_congr_AAddr in IH.
+  etransitivity_n1.
+  + exact IH.
+  + constructor.
+Qed.
 (** [] *)
 
 End Task3.
