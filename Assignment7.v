@@ -175,7 +175,7 @@ Qed.
 (** Is it true that every semantically legal command is also syntactically 
     legal? 1. Yes. 2. No. *)
 
-Definition my_choice: Z := 1.
+Definition my_choice: Z := 2.
 (* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
