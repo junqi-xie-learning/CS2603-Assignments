@@ -64,8 +64,22 @@ Notation "[ x ; .. ; y ]" := (@cons tm x .. (@cons tm y (@nil tm)) ..).
     result. This list should describe the evaluation step by step.
 *)
 
-Definition process_1: list tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition process_1: list tm :=
+[
+  app
+    (app
+      (abs "f" (abs "x" (app "f" "x")))
+      (abs "x" (app (app Omult "x") "x")))
+    2;
+  app
+    (abs "x"
+      (app (abs "x" (app (app Omult "x") "x")) "x"))
+    2;
+  app (abs "x" (app (app Omult "x") "x")) 2;
+  app (app Omult 2) 2;
+  4
+].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -80,7 +94,10 @@ Example result_1:
        2)
     4.
 Proof.
-(* FILL IN HERE *) Admitted.
+  repeat
+    (etransitivity_1n; [apply next_state_sound; reflexivity | try simpl subst]).
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -93,7 +110,11 @@ Example type_1: forall T1 T2: ty,
   empty_context |-
     (abs "f" (abs "x" (app "f" "x"))) \in ((T1 ~> T2) ~> T1 ~> T2).
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  apply T_abs.
+  apply T_abs.
+  eapply T_app; constructor; reflexivity.
+Qed.
 
 (** **** Exercise: 2 stars, standard *)
 
@@ -110,8 +131,19 @@ Proof.
 
 *)
 
-Definition process_2: list tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition process_2: list tm :=
+[
+  app
+    (abs "x"
+      (app (app (app Oifthenelse (app (app Oeq "x") 0)) 0) 1))
+    2;
+  app
+    (app (app Oifthenelse (app (app Oeq 2) 0)) 0)
+    1;
+  app (app (app Oifthenelse false) 0) 1;
+  1
+]
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *).
 (** [] *)
 
 (** **** Exercise: 2 stars, standard *)
@@ -139,7 +171,14 @@ Lemma ill_typed_example: forall Gamma T,
     abs "x" (app (app (app Oifthenelse (app (app Oeq "x") 0)) 0) false) \in T ->
   False.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros.
+  inversion H; subst.
+  deduce_types_from_head H4.
+  inversion H3; subst.
+  inversion H1; subst.
+  inversion H5; subst.
+  inversion H7.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard *)
@@ -158,8 +197,8 @@ Proof.
 
     2. There does not exist such [t]. *)
 
-Definition my_choice: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** You should start your proof with either one of the following:
@@ -176,6 +215,20 @@ Lemma reverse_of_type_safe:
                 (forall T, empty_context |- t \in T -> False)) \/
   (my_choice = 2).
 Proof.
-(* FILL IN HERE *) Admitted.
+  left; split; [reflexivity |].
+  exists (app
+           (abs "x" (app (app (app Oifthenelse (app (app Oeq "x") 0)) 0) false))
+           1),
+         false.
+  repeat split.
+  2: constructor.
+  + repeat
+    (etransitivity_1n; [apply next_state_sound; reflexivity | try simpl subst]).
+    reflexivity.
+  + intros.
+    inversion H; subst.
+    apply ill_typed_example in H3.
+    exact H3.
+Qed.
 
 (* 2021-05-24 21:19 *)
