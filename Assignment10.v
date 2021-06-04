@@ -71,7 +71,12 @@ Lemma power_3_3_well_typed:
   empty_context |- app (app do_it_three_times do_it_three_times) add_one \in
     (TInt ~> TInt).
 Proof.
-(* FILL IN HERE *) Admitted.
+  eapply T_app.
+  2: apply type_of_add_one.
+  eapply T_app.
+  + apply type_of_do_it_three_times.
+  + apply type_of_do_it_three_times.
+Qed.
 (** [] *)
 
 (** Obviously, we can take at least one step to in the process of evaluating
@@ -85,8 +90,10 @@ Definition step_statement: Prop :=
     explicitly and prove the step relation. What is that step result? *)
 
 (** **** Exercise: 1 star, standard (step_result) *)
-Definition step_result: tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition step_result: tm :=
+  app (abs "x" (app do_it_three_times
+    (app do_it_three_times (app do_it_three_times "x")))) add_one.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** On the other hand, we know that step result must exists since lambda
@@ -96,8 +103,8 @@ Definition step_result: tm
     1. Progress. 2. Preservation. *)
 
 (** **** Exercise: 1 star, standard *)
-Definition my_choice1: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** Moreover, from type safety, we know that the [step_result] is also well
@@ -111,8 +118,8 @@ Definition step_result_type_statement: Prop :=
     1. Progress. 2. Preservation. *)
 
 (** **** Exercise: 1 star, standard *)
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task1.
@@ -153,8 +160,8 @@ Definition expression: tm :=
   \let "x" \be ("y" + 1)%tm \in
   "x".
   
-Definition eval_result: tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition eval_result: tm := 3.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task2_1.
@@ -167,8 +174,8 @@ Definition expression: tm :=
   \let "x" \be app (abs "x" "x") 1 \in
   "x".
   
-Definition eval_result: tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition eval_result: tm := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task2_2.
@@ -186,8 +193,8 @@ Definition expression: tm :=
          "x"))) \in
   app (app (app "F" "F") (abs "x" ("x" + 1)%tm)) 0.
   
-Definition eval_result: tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition eval_result: tm := 27.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task2_3.
@@ -201,8 +208,10 @@ Definition expression: tm :=
      (abs "f" (abs "x" (abs "y" (app (app "f" "y") "x")))) \in
   app "swap_arg" (abs "x" (abs "y" ("x" - "y")%tm)).
   
-Definition eval_result: tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition eval_result: tm :=
+  abs "x" (abs "y" (app (app
+    (abs "x" (abs "y" ("x" - "y")%tm)) "y") "x")).
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task2_4.
@@ -237,8 +246,8 @@ Definition expression: tm :=
   \let "x" \be app "get_and_add" "p" \in
   "x".
   
-Definition eval_result: tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition eval_result: tm := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task3_1.
@@ -257,8 +266,8 @@ Definition expression: tm :=
   \let "f" \be (app "func_add_one" (app Oread "p")) \in
   app "f" 0.
   
-Definition eval_result: tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition eval_result: tm := 2.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Task3_2.
