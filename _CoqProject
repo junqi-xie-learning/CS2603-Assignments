@@ -1,4 +1,4 @@
--Q . PL
+-Q ./Imp PL
 
 -Q ./VST-Assignment EV
 -Q ./VST/msl VST.msl
