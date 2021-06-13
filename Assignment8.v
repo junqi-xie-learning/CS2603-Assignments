@@ -236,7 +236,7 @@ Import ListNotations.
     This is a multiple-choice problem. You should use an ascending Coq list to
     describe your answer, e.g. [1; 2; 3], [1; 3], [2]. *)
 
-Definition my_answer_1_5: list Z := [2].
+Definition my_answer_1_5: list Z := [1; 2].
 (** [] *)
 
 End Task1.
