@@ -226,26 +226,82 @@ Definition asgn_sem (DA1 DA2: state -> option Z): denote :=
 
 (** **** Exercise: 1 star, standard (break_sem) *)
 
-Definition break_sem: denote
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition break_sem: denote :=
+  {|
+     NormalExit := BinRel.empty;
+     BreakExit := BinRel.id;
+     ContExit := BinRel.empty;
+     ErrorExit := Sets.empty
+  |}.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard (cont_sem) *)
 
-Definition cont_sem: denote
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition cont_sem: denote := 
+  {|
+     NormalExit := BinRel.empty;
+     BreakExit := BinRel.empty;
+     ContExit := BinRel.id;
+     ErrorExit := Sets.empty
+  |}.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (seq_sem) *)
 
-Definition seq_sem (d1 d2: denote): denote
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition seq_sem (d1 d2: denote): denote :=
+  {|
+     NormalExit := BinRel.concat (NormalExit d1) (NormalExit d2);
+     BreakExit := BinRel.union
+                  (BreakExit d1)
+                  (BinRel.concat (NormalExit d1) (BreakExit d2));
+     ContExit := BinRel.union
+                  (ContExit d1)
+                  (BinRel.concat (NormalExit d1) (ContExit d2));
+     ErrorExit := Sets.union
+                  (ErrorExit d1)
+                  (BinRel.dia (NormalExit d1) (ErrorExit d2))
+  |}.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (if_sem) *)
 
-Definition if_sem (db: bexp_denote) (d1 d2: denote): denote
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition if_sem (db: bexp_denote) (d1 d2: denote): denote :=
+  {|
+     NormalExit := BinRel.union
+                  (BinRel.concat
+                     (BinRel.test_rel (true_set db))
+                     (NormalExit d1))
+                  (BinRel.concat
+                     (BinRel.test_rel (false_set db))
+                     (NormalExit d2));
+     BreakExit := BinRel.union
+                  (BinRel.concat
+                      (BinRel.test_rel (true_set db))
+                      (BreakExit d1))
+                  (BinRel.concat
+                      (BinRel.test_rel (false_set db))
+                      (BreakExit d2));
+     ContExit := BinRel.union
+                  (BinRel.concat
+                    (BinRel.test_rel (true_set db))
+                    (ContExit d1))
+                  (BinRel.concat
+                    (BinRel.test_rel (false_set db))
+                    (ContExit d2));
+     ErrorExit := Sets.union
+                  (error_set db)
+                  (Sets.union
+                      (BinRel.dia 
+                         (BinRel.test_rel (true_set db))
+                         (ErrorExit d1))
+                      (BinRel.dia
+                         (BinRel.test_rel (false_set db))
+                         (ErrorExit d2)))
+|}.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End ImpCFPointer.
@@ -272,16 +328,28 @@ Definition ONE: tm := abs "F" (abs "x" (app "F" "x")).
 
 Definition expr1: tm := app (app (app IFTHENELSE TRUE) ZERO) ONE.
 
-Definition process_1: list tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition process_1: list tm :=
+[
+  app (app (app IFTHENELSE TRUE) ZERO) ONE;
+  app (app (abs "x" (abs "y" (app (app TRUE "x") "y"))) ZERO) ONE;
+  app (abs "y" (app (app (abs "t" (abs "f" "t")) ZERO) "y")) ONE;
+  app (app (abs "t" (abs "f" "t")) ZERO) ONE;
+  app (abs "f" ZERO) ONE;
+  ZERO
+].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 2 stars, standard *)
 
 Definition expr2: tm := app ONE ONE.
 
-Definition process_2: list tm
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition process_2: list tm :=
+[
+  app ONE ONE;
+  abs "x" (app ONE "x")
+].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End CBVLambda.
@@ -309,8 +377,8 @@ Module Compiler.
     This is a multiple-choice problem. You should use an ascending Coq list to
     describe your answer, e.g. [1; 2; 3], [1; 3], [2]. *)
 
-Definition my_choice1: list Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice1: list Z := [2; 3].
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 (** **** Exercise: 1 star, standard  *)
@@ -325,8 +393,8 @@ Definition my_choice1: list Z
 
     2. The compiler [G] has a bug. *)
 
-Definition my_choice2: Z
-(* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition my_choice2: Z := 1.
+(* REPLACE THIS LINE WITH ":= _your_definition_ ." *)
 (** [] *)
 
 End Compiler.
