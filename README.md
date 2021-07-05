@@ -7,7 +7,7 @@ If you found any mistakes in the solutions, please create an issue or contact me
 ## Environment Setup
 
 * This repository was tested with Coq Version 8.12.2, Windows 10.
-* `RTClosure.v` and `Imp.v` should be compiled according to the instructions from [Separate Compilation](https://softwarefoundations.cis.upenn.edu/lf-current/Induction.html#lab50) in *Software Foundations*.
+* Files in `/Imp` should be compiled according to the instructions from [Separate Compilation](https://softwarefoundations.cis.upenn.edu/lf-current/Induction.html#lab50) in *Software Foundations*.
 * Assignment 6 also requires the VST submodule from [PrincetonUniversity/VST](https://github.com/PrincetonUniversity/VST/tree/release-v2.6). Please install it according to the instructions.
 
 ## License
